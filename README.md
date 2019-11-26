@@ -6,7 +6,7 @@
 
 R code avaiable from https://https://github.com/zhuyuchen95/ADnet/new/master/MCC_SP.r
 ```
-MCC_SP(gene,cg_table1,family_xuhao,sigma, path_test=10000)
+MCC_SP(gene,cg_table1,family_xuhao,sigma,sig_gene, path_test=10000)
 ```
 ### Input:
 

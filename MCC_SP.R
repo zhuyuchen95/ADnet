@@ -1,11 +1,17 @@
 library(dplyr)
 library(energy)
 library(acepack)
+#---------Before running the following code, please run the following 3 source files and ensure that the required variables have been arranged as required.
 source("KDE.r")
 source("dijkstra.r")
 source("kshortestpath.r")
-
-MCC_SP <- function(gene,cg_table1,AD_gene,family_xuhao,sigma, path_test=10000){
+#------------------The following comment lines indicate that the variable can be obtained by reading the input variables in the format of csv
+#------------------Readers can also get the input variables through R.data for this function
+# ADs_gene <- read.csv("ADnetwork.csv",header = T,stringsAsFactors=F)
+# sig_gene <- read.csv("sig_gene.csv",stringsAsFactors=F)
+# sigma <- read.csv("network.csv",header=TRUE)
+# family_xuhao <- read.csv("family_xuhao.csv",header = T,stringsAsFactors=F)
+MCC_SP <- function(gene,cg_table1,family_xuhao,sigma,sig_gene, path_test=10000){
 
   all_gene <- gene
   apoe_type <- ifelse(cg_table1$apoe_genotype==24|cg_table1$apoe_genotype==34|cg_table1$apoe_genotype==44,1,0)
@@ -13,25 +19,13 @@ MCC_SP <- function(gene,cg_table1,AD_gene,family_xuhao,sigma, path_test=10000){
   all_gene <- cbind(all_gene,apoe_type)
   colnames(all_gene) <- c(colnames(gene),'ending','apoe_type')
   all_gene <- as.data.frame(all_gene)
-  #Use the genes that are significant in linear regression
-  p_v <- c()
-  for (i in 1:(ncol(all_gene)-2)) {
-    fit <- lm(ending~all_gene[,i],data =all_gene )
-    a <- summary(fit)
-    p_value <- a$coefficients[2,4]
-    p_v <- c(p_v,p_value)
-  }
-  ad <- ifelse(p_v<0.05,1,0)
-  sig <-cbind(colnames(gene),p_v,ad)
-  sig_gene <- subset(sig,ad==1)
-  colnames(sig_gene) <- c('gene','p','exist')
+
   #-------------------------------------------------------------
-  xuhao <- family_xuhao$gene
   mean_data <-gene[,sig_gene$gene]
   mean_data2 <- as.data.frame(mean_data)
+  xuhao <- family_xuhao$gene
   library(dplyr)
   aa <- mean_data2 %>% select(xuhao)
-  
   sort_data <- as.matrix(aa)
   #The variable 'ex' indicates whether the APOE genotype is mutated
   ex <- ifelse(cg_table1$apoe_genotype==24|cg_table1$apoe_genotype==34|cg_table1$apoe_genotype==44,1,0)

@@ -1,4 +1,4 @@
-# ADnet: MCC-SP: An integration powerful method for Identification of Causal Pathways from genetic variants to complex disease
+# ADnet: An integration powerful method(MCC-SP) for Identification of Causal Pathways from genetic variants to complex disease
 <br >
 
 
